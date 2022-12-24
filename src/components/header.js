@@ -13,22 +13,40 @@ const Header = ({ user, setUser }) => {
         navigate("/");
     }
     const SignInClick = () => {
-        navigate("/signin");
+        navigate("/sign-in");
     }
     const SignUpClick = () => {
-        navigate("/signup");
+        navigate("/sign-up");
     }
     const ResetPasswordClick = () => {
-        navigate("/resetPassword");
+        navigate("/reset-password");
+    }
+    const BlogsClick = () => {
+        navigate("/blogs");
+    }
+    const MyBlogsClick = () => {
+        navigate("/my-blogs", { replace: true, state: { user: user } } );
+    }
+    const WirteBlogClick = () => {
+        navigate("/write-blog");
     }
     const loggedNav = () => {
         return (
             <>
                 <Col xs={12} md={6}>
-                    <Button type="default" onClick={ResetPasswordClick} >Reset Password</Button>
+                    <Button type="default" onClick={BlogsClick} >Blogs</Button>
+                </Col>
+                <Col xs={12} md={6}>
+                    <Button type="default" onClick={MyBlogsClick} >My Blogs</Button>
+                </Col>
+                <Col xs={12} md={6}>
+                    <Button type="dashed" onClick={WirteBlogClick} >Write Blog</Button>
                 </Col>
                 <Col xs={12} md={6}>
                     <Button type="primary" onClick={SignOutClick} >Log Out</Button>
+                </Col>
+                <Col xs={12} md={6}>
+                    <Button type="default" onClick={ResetPasswordClick} >Reset Password</Button>
                 </Col>
             </>
         );

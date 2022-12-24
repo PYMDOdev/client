@@ -7,6 +7,9 @@ import SignIn from "./pages/signin";
 import SignUp from "./pages/signup";
 import ForgetPassword from "./pages/forgetPassword";
 import ResetPassword from "./pages/resetPassword";
+import Blogs from "./pages/blogs";
+import Blog from "./pages/blog";
+import WriteBlog from "./pages/writeBlog";
 import React from "react";
 import { Container } from "react-bootstrap";
 
@@ -21,9 +24,13 @@ function App() {
           <Routes>
             <Route path="/" element={<Home user={user} />} exact />
             <Route path="/sign-in" element={<SignIn setUser={setUser} />} />
-            <Route path="/sign-up" element={<SignUp  adminState={false} setUser={setUser} />} />
+            <Route path="/sign-up" element={<SignUp  adminState={true} setUser={setUser} />} />
             <Route path="/forget-password" element={<ForgetPassword />} />
             <Route path="/reset-password" element={<ResetPassword user={user} />} />
+            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/my-blogs" element={<Blogs />} />
+            <Route path="/write-blog" element={<WriteBlog />} />
+            <Route path="/blog" element={<Blog />} />
           </Routes>
         </Container>
       </main>

@@ -42,6 +42,7 @@ const SignIn = ({ setUser }) => {
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
+        <Button type="link" onClick={()=> { navigate('/forget-password'); }}>Forget Password</Button>
       </Form.Item>
     </Form>
   );
