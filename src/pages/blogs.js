@@ -1,11 +1,13 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, List, Skeleton } from "antd";
+import {  Button, List, Skeleton } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
+import { GetBlogs } from "../utils/api";
 let count = 10;
 
-const Blogs = () => {
+const Blogs = ({ userData }) => {
+    const token = userData ? userData.token : "";
     const { state } = useLocation();
-    console.log(state);
     count = state ? 1 : 10;
     let fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat,picture&noinfo`;
     const navigate = useNavigate();
@@ -14,14 +16,16 @@ const Blogs = () => {
     const [data, setData] = useState([]);
     const [list, setList] = useState([]);
     useEffect(() => {
-        fetch(fakeDataUrl)
-            .then((res) => res.json())
-            .then((res) => {
+        async function fetchData(){
+            const state = await GetBlogs(token);
+            if (state){
                 setInitLoading(false);
-                setData(res.results);
-                setList(res.results);
-            });
-    }, [fakeDataUrl]);
+                setData(state);
+                setList(state);
+            }
+        }
+        fetchData();
+    });
     const onLoadMore = () => {
         setLoading(true);
         setList(
@@ -70,21 +74,19 @@ const Blogs = () => {
                     actions={[
                         <Button type="link"
                             onClick={() => {
-                                navigate("/blog", { replace: false, state: { blog: item } });
-                                console.log(item);
+                                navigate("/blog", { replace: false, state: { blogId:item._id, token: token } });
                             }}
                         >
-                            edit
+                            Read
                         </Button>,
                     ]}
                 >
                     <Skeleton avatar title={false} loading={item.loading} active>
                         <List.Item.Meta
-                            avatar={<Avatar src={item.picture.large} />}
-                            title={<a href="https://ant.design">{item.name?.last}</a>}
-                            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                            avatar={<h3>{item.author} </h3>}
+                            title={<a onClick={() => {navigate("/blog", { replace: false, state: { blogId:item._id, token: token } }); }}><h1>{item.title}</h1></a>}
+                            description={ item.content.substring(0, 100) + "..."}
                         />
-                        <div>content</div>
                     </Skeleton>
                 </List.Item>
             )}

@@ -6,6 +6,8 @@ import {
     Input,
 } from 'antd';
 import { useNavigate } from "react-router-dom";
+import { AddBlog } from "../utils/api";
+import { Container, Row, Col } from "react-bootstrap";
 
 
 const formItemLayout = {
@@ -31,19 +33,23 @@ const tailFormItemLayout = {
     },
 };
 
-const WriteBlog = ({ adminState, setUser }) => {
+const WriteBlog = ({ userData }) => {
+    const user = userData ? userData.user : null;
     const navigate = useNavigate();
     const [form] = Form.useForm();
 
-    const onFinish = (values) => {
-        setUser(values)
-        navigate("/");
+    const onFinish = async (values) => {
+        values.author = user.username;
+        const state = await AddBlog({ token: userData.token, values: values });
+        if (state){
+            navigate("/my-blogs", { replace: true, state: { user: user } } );
+        }
     };
 
 
 
 
-    return (
+    return userData ? (
         <Form
             {...formItemLayout}
             form={form}
@@ -78,6 +84,16 @@ const WriteBlog = ({ adminState, setUser }) => {
                 </Button>
             </Form.Item>
         </Form>
+    ) : (
+        <Container>
+            <div className="containerDesign">
+                <Row className="justify-content-center">
+                    <Col xs={12} md={6}>
+                            <p> User Not Found </p>
+                    </Col>
+                </Row>
+            </div>
+        </Container>
     );
 };
 

@@ -1,15 +1,20 @@
 import React from "react";
 import { Form, Button, Input } from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 import '../css/home.css';
+import { Login } from "../utils/api";
 
-const SignIn = ({ setUser }) => {
-    const navigate = useNavigate();
+const SignIn = ({ setUserData }) => {
+  const navigate = useNavigate();
 
-    const handleClick = (values) => {
-        setUser(values)
-        navigate("/");
+  const handleClick = async (values) => {
+    const state = await Login(values);
+    if (state) {
+      setUserData(state);
+      navigate("/");
     }
+  }
   return (
     <Form
       name="basic"
@@ -19,30 +24,46 @@ const SignIn = ({ setUser }) => {
       onFinish={handleClick}
       //onFinishFailed={onFinishFailed}
       autoComplete="off"
-      style={{ width: '50%', marginLeft : '20%' }}
+      style={{ width: '50%', marginLeft: '35%' }}
     >
       <Form.Item
-        label="Username"
         name="username"
-        rules={[{ required: true, message: 'Please input your username!' }]}
+        rules={[
+          {
+            required: true,
+            message: 'Please input your Username!',
+          },
+        ]}
       >
-        <Input />
+        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
       </Form.Item>
 
       <Form.Item
-        label="Password"
         name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
+        rules={[
+          {
+            required: true,
+            message: 'Please input your Password!',
+          },
+        ]}
       >
-        <Input.Password />
+        <Input
+          prefix={<LockOutlined className="site-form-item-icon" />}
+          type="password"
+          placeholder="Password"
+        />
+      </Form.Item>
+      <Form.Item style={{ textAlignLast: 'right'}}>
+        <Button type="link" onClick={() => { navigate('/forget-password'); }}>Forget Password</Button>
       </Form.Item>
 
-
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
-          Submit
+      <Form.Item>
+        <Button style={{ width: '100%'}} type="primary" htmlType="submit" className="login-form-button">
+          Log in
         </Button>
-        <Button type="link" onClick={()=> { navigate('/forget-password'); }}>Forget Password</Button>
+        <div  style={{ textAlignLast: 'right'}}>
+          Or<Button type="link" onClick={() => { navigate('/sign-up'); }}> register now!</Button>
+        </div>
       </Form.Item>
     </Form>
   );
