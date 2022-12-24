@@ -1,44 +1,71 @@
 import React from "react";
 import { Button, Divider, Space } from 'antd';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 
-const Header = ({ user, setUser }) => {
+const Header = ({ userData, setUserData }) => {
+    const user = userData ? userData.user : null;
     const navigate = useNavigate();
     const SignOutClick = () => {
-        setUser(null);
+        setUserData(null);
         navigate("/");
     }
     const homeClick = () => {
         navigate("/");
     }
     const SignInClick = () => {
-        navigate("/signin");
+        navigate("/sign-in");
     }
     const SignUpClick = () => {
-        navigate("/signup");
+        navigate("/sign-up");
     }
     const ResetPasswordClick = () => {
-        navigate("/resetPassword");
+        navigate("/reset-password");
+    }
+    const BlogsClick = () => {
+        navigate("/blogs");
+    }
+    const MyBlogsClick = () => {
+        navigate("/my-blogs", { replace: true, state: { user: user } } );
+    }
+    const WirteBlogClick = () => {
+        navigate("/write-blog");
     }
     const loggedNav = () => {
         return (
             <>
                 <Col xs={12} md={6}>
-                    <Button type="default" onClick={ResetPasswordClick} >Reset Password</Button>
+                    <Button type="default" onClick={BlogsClick} >Blogs</Button>
                 </Col>
+                {
+                    (user.userType !== "normal") && <>
+                    <Col xs={12} md={6}>
+                        <Button type="default" onClick={MyBlogsClick} >My Blogs</Button>
+                    </Col>
+                    <Col xs={12} md={6}>
+                        <Button type="dashed" onClick={WirteBlogClick} >Write Blog</Button>
+                    </Col>
+                    </>
+                }
                 <Col xs={12} md={6}>
                     <Button type="primary" onClick={SignOutClick} >Log Out</Button>
                 </Col>
+                <Col xs={12} md={6}>
+                    <Button type="default" onClick={ResetPasswordClick} >Reset Password</Button>
+                </Col>
+                {
+                    (user.userType === "admin") &&
+                    <Col xs={12} md={6}>
+                        <Button type="primary" onClick={SignUpClick} >Create User</Button>
+                    </Col>
+
+                }
             </>
         );
     }
     const defaultNav = () => {
         return (
             <>
-                <Col xs={12} md={6}>
-                    <Button type="default" onClick={homeClick} >Home</Button>
-                </Col>
                 <Col xs={12} md={6}>
                     <Button type="default" onClick={SignInClick} >Log In</Button>
                 </Col>

@@ -10,7 +10,7 @@ const Home = ({ user }) => {
                     <Col xs={12} md={6}>
                         {
                             user ? 
-                            <p> { user.email }</p>
+                            <p> { user.username }, Welcome to Blog!</p>
                             :
                             <p> User Not Found </p>
                         }
