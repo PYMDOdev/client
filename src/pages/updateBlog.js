@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import '../css/home.css';
 import {
     Button,
     Form,
     Input,
 } from 'antd';
-import { useNavigate } from "react-router-dom";
-import { AddBlog } from "../utils/api";
+import { useNavigate, useLocation } from "react-router-dom";
+import { GetBlog, UpdateBlog } from "../utils/api";
 import { Container, Row, Col } from "react-bootstrap";
 
 
@@ -33,19 +33,33 @@ const tailFormItemLayout = {
     },
 };
 
-const WriteBlog = ({ userData }) => {
+const UpdateAuthorBlog = ({ userData }) => {
     const user = userData ? userData.user : null;
     const navigate = useNavigate();
+    const { state } = useLocation();
+    const { blogId, token } = state ? state : { blogId: "", token: ""};
     const [form] = Form.useForm();
+
+    const [ blog, setBlog] = React.useState({ title: "Blog Not Found", content: "Blog Not Found", auhtor: "-" });
+       
+    useEffect(() => {
+        async function fetchData(){
+            if (blogId !==  ""){
+                const state = await GetBlog({ token: token, id: blogId });
+                if (state)
+                    setBlog(state);
+            }
+        }
+        fetchData();
+    }, [state, blogId, token])
 
     const onFinish = async (values) => {
         values.author = user.username;
-        const state = await AddBlog({ token: userData.token, values: values });
+        const state = await UpdateBlog({ token: token, id: blogId, values: values });
         if (state){
-            navigate("/my-blogs");
+            navigate("/my-blogs" );
         }
     };
-
 
 
 
@@ -60,8 +74,9 @@ const WriteBlog = ({ userData }) => {
             }}
             style={{ width: '50%', marginLeft: '20%' }}
             scrollToFirstError
+            fields={[{ name: "title", value: [blog.title]}, { name: "content", value: blog.content }]}
         >
-
+            { blog.title }
             <Form.Item
                 name="title"
                 label="Title"
@@ -80,7 +95,7 @@ const WriteBlog = ({ userData }) => {
             </Form.Item>
             <Form.Item {...tailFormItemLayout}>
                 <Button type="primary" htmlType="submit">
-                    Publish
+                    Update
                 </Button>
             </Form.Item>
         </Form>
@@ -97,4 +112,4 @@ const WriteBlog = ({ userData }) => {
     );
 };
 
-export default WriteBlog;
+export default UpdateAuthorBlog;

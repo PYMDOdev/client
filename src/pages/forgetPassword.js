@@ -1,14 +1,19 @@
 import React from "react";
 import { Form, Button, Input } from 'antd';
 import { useNavigate } from "react-router-dom";
+import { getPass } from "../utils/api";
 import '../css/home.css';
 
 const ForgetPassword = () => {
     const navigate = useNavigate();
 
-    const handleClick = (values) => {
-        alert("Your password is sended to your email!");
-        navigate("/");
+    const handleClick = async (values) => {
+      
+      const state = await getPass(values.username);
+      if (state){
+          alert("Your password is sended to your email!");
+          navigate("/sign-in" );
+      }
     }
   return (
     <Form
@@ -21,16 +26,12 @@ const ForgetPassword = () => {
       style={{ width: '50%', marginLeft : '25%' }}
     >
     <Form.Item
-      name="email"
-      label="E-mail"
+      name="username"
+      label="Username"
       rules={[
         {
-          type: 'email',
-          message: 'The input is not valid E-mail!',
-        },
-        {
           required: true,
-          message: 'Please input your E-mail!',
+          message: 'Please input your username!',
         },
       ]}
     >
