@@ -2,16 +2,23 @@ import React from "react";
 import { Form, Button, Input } from 'antd';
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
+import { UpdateUser } from "../utils/api";
 import '../css/home.css';
 
-const ResetPassword = ({ user }) => {
+const ResetPassword = ({ userData }) => {
     const navigate = useNavigate();
 
-    const handleClick = (values) => {
-        console.log(values);
-        navigate("/");
+    const handleClick = async (values) => {
+        const user = userData.user;
+        user.password = values.password;
+        delete user._id;
+        delete user.__v;
+        const state = await UpdateUser({ token: userData.token, username: userData.user.username, values: user });
+        if (state){
+            navigate("/" );
+        }
     }
-  return user ? (
+  return userData ? (
     <Form
       name="basic"
       labelCol={{ span: 8 }}

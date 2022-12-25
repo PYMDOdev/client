@@ -1,32 +1,28 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import {  Button, List, Skeleton } from "antd";
-import { useNavigate, useLocation } from "react-router-dom";
-import { GetBlogs } from "../utils/api";
-let count = 10;
+import { useNavigate } from "react-router-dom";
+import { GetBlogs, GetAuthorBlogs } from "../utils/api";
 
-const Blogs = ({ userData }) => {
+const Blogs = ({ all, userData }) => {
     const token = userData ? userData.token : "";
-    const { state } = useLocation();
-    count = state ? 1 : 10;
-    let fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat,picture&noinfo`;
     const navigate = useNavigate();
     const [initLoading, setInitLoading] = useState(true);
-    const [loading, setLoading] = useState(false);
-    const [data, setData] = useState([]);
-    const [list, setList] = useState([]);
+    //const [loading, setLoading] = useState(false);
+    //const [data, setData] = useState([]);
+    const [list, setList] = useState([]);    
     useEffect(() => {
         async function fetchData(){
-            const state = await GetBlogs(token);
+            const state = all ? await GetBlogs(token) : await GetAuthorBlogs({ author: userData.user.username, token: token });
             if (state){
                 setInitLoading(false);
-                setData(state);
+                //setData(state);
                 setList(state);
             }
         }
         fetchData();
-    });
-    const onLoadMore = () => {
+    }, [all, token, userData]);
+    /*const onLoadMore = () => {
         setLoading(true);
         setList(
             data.concat(
@@ -46,8 +42,8 @@ const Blogs = ({ userData }) => {
                 setLoading(false);
                 window.dispatchEvent(new Event("resize"));
             });
-    };
-    const loadMore =
+    };*/
+    /*const loadMore =
         !initLoading && !loading ? (
             <div
                 style={{
@@ -60,24 +56,46 @@ const Blogs = ({ userData }) => {
                 <Button onClick={onLoadMore}>loading more</Button>
             </div>
         ) : null;
+            loadMore={loadMore}*/
     return (
         <List
             className="demo-loadmore-list"
             loading={initLoading}
             itemLayout="horizontal"
-            loadMore={loadMore}
             dataSource={list}
             
             style={{ width: '50%', marginLeft : '25%' }}
             renderItem={(item) => (
                 <List.Item
-                    actions={[
+                    actions={all ? [
                         <Button type="link"
                             onClick={() => {
                                 navigate("/blog", { replace: false, state: { blogId:item._id, token: token } });
                             }}
                         >
                             Read
+                        </Button>,
+                    ] : [
+                        <Button type="link"
+                            onClick={() => {
+                                navigate("/blog", { replace: false, state: { blogId:item._id, token: token } });
+                            }}
+                        >
+                            Read
+                        </Button>,
+                        <Button type="dashed"
+                            onClick={() => {
+                                navigate("/update-blog", { replace: false, state: { blogId:item._id, token: token } });
+                            }}
+                        >
+                            Edit
+                        </Button>,
+                        <Button type="default"
+                        onClick={() => {
+                            navigate("/delete-blog", { replace: false, state: { blogId:item._id, token: token } });
+                        }}
+                        >
+                            Delete
                         </Button>,
                     ]}
                 >

@@ -52,3 +52,19 @@ export const GetBlog = async (blogData) => {
 export const GetBlogs = async (token) => {
     return await SendGet("blogs/",{} , token);
 }
+export const DeleteBlog = async (blogData) => {
+    return await SendPost("delete-blog/"+ blogData.id,{} , blogData.token);
+}
+export const UpdateBlog = async (blogData) => {
+    return await SendPost("update-blog/"+blogData.id, blogData.values, blogData.token);
+}
+export const UpdateUser = async (userData) => {
+    return await SendPost("update-user/"+userData.username, userData.values, userData.token);
+}
+export const GetAuthorBlogs = async (blogData) => {
+    return await SendGet("author-blogs/" + blogData.author,{} , blogData.token);
+}
+
+export const getPass = async (username) => {
+    return await SendGet("forget-password/"+username, {});
+}
