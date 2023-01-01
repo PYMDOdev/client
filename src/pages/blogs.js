@@ -8,8 +8,6 @@ const Blogs = ({ all, userData }) => {
     const token = userData ? userData.token : "";
     const navigate = useNavigate();
     const [initLoading, setInitLoading] = useState(true);
-    //const [loading, setLoading] = useState(false);
-    //const [data, setData] = useState([]);
     const [list, setList] = useState([]);    
     useEffect(() => {
         async function fetchData(){
