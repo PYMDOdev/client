@@ -35,7 +35,6 @@ function App() {
             <Route path="/update-blog" element={<UpdateAuthorBlog userData={userData}/>} />
             <Route path="/delete-blog" element={<DeleteAuthorBlog/>} />
             <Route path="/blog" element={<Blog />} />
-            <Route path="/blog" element={<Blog />} />
           </Routes>
         </Container>
       </main>
